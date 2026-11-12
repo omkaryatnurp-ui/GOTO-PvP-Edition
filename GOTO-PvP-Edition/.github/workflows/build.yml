@@ -1,0 +1,51 @@
+name: Build GOTO PvP Edition HUD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust and WebAssembly target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt
+
+      - name: Install Horizon 0.7.8 mod builder
+        run: cargo install --git https://github.com/starling-client/starling --rev 68a2c4dd1b9a9e511ad3758a79ab772b6f9e5b29 --locked cargo-horizon-mod
+
+      - name: Check formatting
+        working-directory: mod
+        run: cargo fmt --all -- --check
+
+      - name: Build mod
+        working-directory: mod
+        run: cargo horizon-mod build
+
+      - name: Run mod tests
+        working-directory: mod
+        run: cargo horizon-mod test
+
+      - name: Validate mod package
+        working-directory: mod
+        run: cargo horizon-mod check target/horizon-mod/goto_fps.hmod
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GOTO-PvP-Edition-Horizon-0.7.8
+          path: mod/target/horizon-mod/goto_fps.hmod
+          if-no-files-found: error
+          retention-days: 30

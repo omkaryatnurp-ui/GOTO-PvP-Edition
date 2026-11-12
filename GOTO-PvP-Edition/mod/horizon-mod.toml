@@ -1,0 +1,9 @@
+id = "goto_fps"
+name = "GOTO-FPS Counter"
+version = "0.1.0"
+description = "Lightweight live FPS HUD with selectable corner and optional frame lows."
+authors = ["GOTO-FPS"]
+api = "0.1"
+side = "client"
+capabilities = ["render", "ui", "storage"]
+experimental = ["render", "ui"]

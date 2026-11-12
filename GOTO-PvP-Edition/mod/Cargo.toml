@@ -1,0 +1,17 @@
+[package]
+name = "goto-fps"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "MIT"
+description = "Lightweight FPS HUD for Horizon Android 0.7.8"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+horizon-mod-sdk = { git = "https://github.com/starling-client/starling", rev = "68a2c4dd1b9a9e511ad3758a79ab772b6f9e5b29" }
+
+[profile.release]
+opt-level = "s"
+lto = true
